@@ -1,10 +1,12 @@
 package com.mclientui.controller;
 
 import com.mclientui.bean.CommandeBean;
+import com.mclientui.bean.ExpeditionBean;
 import com.mclientui.bean.PaiementBean;
 import com.mclientui.bean.ProductBean;
 import com.mclientui.proxies.MicroServiceCommandeProxy;
 import com.mclientui.proxies.MicroServicePaiementProxy;
+import com.mclientui.proxies.MicroserviceExpeditionProxy;
 import com.mclientui.proxies.MicroserviceProduitsProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +29,8 @@ public class ClientController {
     private MicroServiceCommandeProxy microServiceCommandeProxy;
     @Autowired
     private MicroServicePaiementProxy microServicePaiementProxy;
-
+    @Autowired
+    private MicroserviceExpeditionProxy microserviceExpeditionProxy;
 
     @RequestMapping("/")
     public String accueil(Model model){
@@ -76,6 +79,15 @@ public class ClientController {
         model.addAttribute("paiementOk", paiementOk);
 
         return "Confirmation";
+    }
+
+    @RequestMapping(value= "/suivi/{idExpedition}")
+    public String suiviExpedition(@PathVariable int idExpedition, Model model){
+
+        ExpeditionBean expedition = microserviceExpeditionProxy.recupererUneExpedition(idExpedition);
+        model.addAttribute("expedition", expedition);
+
+        return "Suivi";
     }
 
     //Génére une serie de 16 chiffres au hasard pour simuler vaguement une CB
